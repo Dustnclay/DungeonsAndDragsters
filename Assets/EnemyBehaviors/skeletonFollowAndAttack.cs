@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class skeletonFollowAndAttack : MonoBehaviour
 {
-
     public UnityEngine.AI.NavMeshAgent Enemy;
     public Transform Player;
     private Animator anim;
@@ -13,12 +12,11 @@ public class skeletonFollowAndAttack : MonoBehaviour
     public float shrinkSpeed = 30f;
     public float minimumDistance = 65;
     public float attackDistance = 5;
-
-
     public bool isDead = false;
     
     void Start(){
         anim = GetComponent<Animator>();
+        Enemy = GetComponent<UnityEngine.AI.NavMeshAgent>();
     }
 
     void Update()

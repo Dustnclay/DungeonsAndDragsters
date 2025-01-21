@@ -11,13 +11,16 @@ public class bugBoss : MonoBehaviour
 
     public float targetScale = 0.1f;
     public float shrinkSpeed = .3f;
+    public float health = 300f;
     public float minimumDistance = 65;
     public float attackDistance = 5;
-
+    public float damageToPlayer = 20;
+    private bool canAttack = true;
 
     public Transform spawnPoint;
-    public GameObject wizard;
+    public AudioSource hitSound;
 
+    public GameObject wizard;
 
     public bool isDead = false;
     public float time = 0;
@@ -28,10 +31,10 @@ public class bugBoss : MonoBehaviour
 
     void Update()
     {
-        if(time >= 5){
-            Instantiate(wizard,spawnPoint.transform.position, Quaternion.identity);
-            time = 0;
-        }
+        // if(time >= 5){
+        //     Instantiate(wizard,spawnPoint.transform.position, Quaternion.identity);
+        //     time = 0;
+        // }
         if(isDead){
             anim.SetBool("Walk Forward", false);
             anim.SetBool("Stab Attack", false);
@@ -48,24 +51,43 @@ public class bugBoss : MonoBehaviour
             anim.SetBool("Walk Forward", false);
             anim.SetBool("Stab Attack", true);
             Enemy.SetDestination(Player.position);
+            if(canAttack){
+                Player.gameObject.SendMessage("takeDamage", damageToPlayer, SendMessageOptions.DontRequireReceiver);
+                StartCoroutine(AttackCooldown());
+            }
         }
     }
 
-         IEnumerator ExecuteAfterTime(float time)
+         IEnumerator ExecuteAfterTime()
+            {
+                Debug.Log("start wizad");
+                yield return new WaitForSeconds(2f);
+                Instantiate(wizard,transform.position, Quaternion.identity);
+            }
+
+        IEnumerator AttackCooldown()
+            {
+                canAttack = false;
+                yield return new WaitForSeconds(2f); // 2 seconds cooldown
+                canAttack = true;
+            }
+
+    public void takeDamage(float damage){
+        if (hitSound != null)
         {
-            yield return new WaitForSeconds(time);
-        Instantiate(wizard,spawnPoint.transform.position, Quaternion.identity);
+            // hitSound.Play();
         }
-
-    public void takeDamage(){
         if(isDead == false){
-                    StartCoroutine(ExecuteAfterTime(1));
-
-        anim.SetTrigger("Die");
-        isDead = true;
-        Destroy(gameObject, 5);
+            health -= damage;
+            Debug.Log(health);
+            if(health <= 0)
+            {
+                StartCoroutine(ExecuteAfterTime());
+                anim.SetTrigger("Die");
+                isDead = true;
+                Destroy(gameObject, 5);
+            }
         }
-
     }
 
         void SpawnWizard(){

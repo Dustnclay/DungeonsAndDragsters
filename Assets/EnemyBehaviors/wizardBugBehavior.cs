@@ -5,8 +5,9 @@ using UnityEngine;
 public class wizardBugBehavior : MonoBehaviour
 {
 
-    public UnityEngine.AI.NavMeshAgent Enemy;
-    public Transform Player;
+    private UnityEngine.AI.NavMeshAgent Enemy;
+    private Transform Player;
+    // private GameObject Player;
     private Animator anim;
 
     public float targetScale = 0.1f;
@@ -19,25 +20,26 @@ public class wizardBugBehavior : MonoBehaviour
     
     void Start(){
         anim = GetComponent<Animator>();
+        Enemy = GetComponent<UnityEngine.AI.NavMeshAgent>();
+        // Player = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     void Update()
     {
-        
         // if(isDead){
-        //     anim.SetBool("isDead", true);
+            anim.SetBool("isDead", true);
         //     Enemy.transform.localScale -= Vector3.one*Time.deltaTime*shrinkSpeed;
         //     Enemy.velocity = Vector3.zero;
         // }
         
         if( !isDead && Vector3.Distance(transform.position, Player.position) < minimumDistance && Vector3.Distance(transform.position, Player.position) > attackDistance){
-            anim.SetBool("isCasting", true);
+            // anim.SetBool("isCasting", true);
             // animator.SetBool("isAttacking", false);
             // anim.Play("RunForward");
 
             // Enemy.SetDestination(Player.position);
         }else{
-                        anim.SetBool("isCasting", false);
+            anim.SetBool("isCasting", false);
 
         }
         // else if(!isDead && Vector3.Distance(transform.position, Player.position) < attackDistance){

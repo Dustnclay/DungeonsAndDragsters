@@ -9,25 +9,30 @@ public class ShootProjectile : MonoBehaviour
     public float zVelocity = 1500f;
     public float missleLifetime = 2f;
     public float range = 20f;
+    public float damageAmount = 25f;
 
     public GameObject kartCam;
+    public AudioSource shootSound;
     Animator anim;
 
     // Update is called once per frame
     void Update()
     {
-       if(Input.GetKeyDown(KeyCode.Mouse0)){
+       if(Input.GetKeyDown(KeyCode.Space)){
             Shoot();
        }
     }
     void Shoot(){
+        if (shootSound != null)
+        {
+            shootSound.Play();
+        }
         RaycastHit hit;
 
         if(Physics.Raycast(kartCam.transform.position, kartCam.transform.forward, out hit, range)){
             if(hit.transform.tag == "Enemy")
-                // Debug.Log("hit");
-                hit.transform.gameObject.SendMessageUpwards("takeDamage", SendMessageOptions.DontRequireReceiver);
-                // Destroy(hit.transform.gameObject , 3);   
+
+                hit.transform.gameObject.SendMessageUpwards("takeDamage",damageAmount, SendMessageOptions.DontRequireReceiver);
         }
         //using bullet
         // GameObject launchedProjectile = Instantiate(projectile, transform.position, transform.rotation);
